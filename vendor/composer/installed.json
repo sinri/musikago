@@ -1,0 +1,48 @@
+[
+    {
+        "name": "sinri/sinri-database-agent",
+        "version": "0.6",
+        "version_normalized": "0.6.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sinri/sinri-database-agent.git",
+            "reference": "ecd97735613169d2de093144be5c55ab970e9f88"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://files.phpcomposer.com/files/sinri/sinri-database-agent/ecd97735613169d2de093144be5c55ab970e9f88.zip",
+            "reference": "ecd97735613169d2de093144be5c55ab970e9f88",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-03-22 14:37:08",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "autoload.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Sinri Edogawa",
+                "email": "e.joshua.s.e@gmail.com",
+                "homepage": "https://github.com/sinri/sinri-database-agent",
+                "role": "Developer"
+            }
+        ],
+        "description": "Provide a old-style alike quick SQL handler for PHP.",
+        "homepage": "https://github.com/sinri/sinri-database-agent",
+        "keywords": [
+            "database",
+            "php",
+            "sql"
+        ]
+    }
+]
