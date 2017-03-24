@@ -16,10 +16,45 @@ class BaseAgent
 
     public function __construct()
     {
-        $this->Musikago=Musikago::getInstance();
+        $this->Musikago = Musikago::getInstance();
+        $this->Musikago->session->sessionStart();
+        if($this->needLogin() && !$this->holdingLoginSession()){
+            //$this->entrance();
+            header("Location: ./?agent=SessionAgent&action=entrance");
+            exit();
+        }
     }
 
-    public function index($params=[]){
+    public function index()
+    {
         echo "Under Construction...";
+    }
+
+    public function needLogin(){
+        return true;
+    }
+
+    public final function holdingLoginSession(){
+        if(isset($_SESSION['user_id'])){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public final function entrance()
+    {
+        $this->Musikago->session->sessionRestart();
+        $this->Musikago->output->view('SessionAgent/GateView');
+        exit();
+    }
+
+    /**
+     * @deprecated
+     */
+    public final function logout(){
+        $this->Musikago->session->sessionRestart();
+        header("Location: ./?agent=SessionAgent&action=entrance");
+        exit();
     }
 }

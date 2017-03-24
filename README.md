@@ -1,6 +1,8 @@
 # 虫籠 (musikago)
 Collect and kill bugs.
 
+Local Test URL: http://localhost/WebProjects/musikago/
+
 ## Design
 
 It should contain mainly three parts:

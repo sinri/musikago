@@ -6,7 +6,7 @@
  * Time: 10:35
  */
 
-namespace sinri\musikago\library;
+namespace sinri\musikago\core;
 
 
 class LibInput extends BaseLibrary
@@ -19,6 +19,11 @@ class LibInput extends BaseLibrary
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function shortName()
+    {
+        return "input";
     }
 
     public function getRequest($name, $default = null, $regex = null, &$error = 0)
@@ -68,6 +73,9 @@ class LibInput extends BaseLibrary
 
     public function fullPostFields(){
         return $_POST?$_POST:[];
+    }
+    public function fullGetFields(){
+        return $_GET?$_GET:[];
     }
 
     /**

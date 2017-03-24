@@ -8,8 +8,7 @@
 
 namespace sinri\musikago\core;
 
-
-use sinri\musikago\library\LibInput;
+use sinri\SinriDatabaseAgent\SinriPDO;
 
 class Musikago
 {
@@ -29,48 +28,75 @@ class Musikago
         $this->components=[];
     }
 
-    public function start(){
+    public function start()
+    {
         try {
             $this->components = [];
             // Load helpers and libraries
             $this->loadHelper("CommonHelper");
 
-            $this->loadLibrary("LibInput");
-            $this->loadLibrary("LibOutput");
+            $this->loadCoreLibrary("LibConfig");
+            $this->loadCoreLibrary("LibInput");
+            $this->loadCoreLibrary("LibOutput");
+            $this->loadCoreLibrary("LibSession");
+
+            // $this->loadCoreLibrary("LibDatabase");
+            $this->loadDatabase();
 
             // Seek agent and pass request to it
+//            $params=$this->input->fullGetFields();
+
             $input_error = LibInput::REQUEST_NO_ERROR;
-            $agent_name = $this->LibInput->readGet('agent', 'HomeAgent', '/^[A-Za-z0-9_\/]+$/', $input_error);
+            $agent_name = $this->input->readGet('agent', 'HomeAgent', '/^[A-Za-z0-9_\/]+$/', $input_error);
             if ($input_error === LibInput::REQUEST_REGEX_NOT_MATCH) {
                 // 404 Warning
                 throw new \Exception("Agent {$agent_name} is not correctly declared.");
             }
             $agent = $this->loadAgent($agent_name);
 
-            $action_name = $this->LibInput->readGet('action', 'index', '/^[A-Za-z0-9_]+$/', $input_error);
-            if ($input_error===LibInput::REQUEST_REGEX_NOT_MATCH || !method_exists($agent, $action_name)) {
+            $action_name = $this->input->readGet('action', 'index', '/^[A-Za-z0-9_]+$/', $input_error);
+            if ($input_error === LibInput::REQUEST_REGEX_NOT_MATCH || !method_exists($agent, $action_name)) {
                 // action_name not found
                 throw new \Exception("Action {$action_name} is not correctly declared.");
             }
-            $params = $this->LibInput->fullPostFields();
-        }catch(\Exception $exception){
-            $this->LibOutput->error("The request could not be correctly handled!",$exception);
+
+//            unset($params['agent']);
+//            unset($params['action']);
+
+//            $data = $this->input->fullPostFields();
+        } catch (\Exception $exception) {
+            $this->output->error("The request could not be correctly handled!", $exception);
             return;
         }
 
         // The exception from process inside the agent would not be handled globally
-        $agent->$action_name($params);
+        $agent->$action_name();
     }
 
     public function loadHelper($name){
         $this->loadComponentFile('helper',$name);
     }
+    public function loadCoreLibrary($name){
+        $this->loadComponentFile('core',"BaseLibrary");
+        $this->loadComponentFile('core',$name);
+        $long_class_name="sinri\\musikago\\core\\$name";
+        $lib=new $long_class_name();
+        $lib_key=$name;
+        if($lib->shortName()){
+            $lib_key=$lib->shortName();
+        }
+        $this->components[$lib_key]=$lib;
+    }
     public function loadLibrary($name){
-        $this->loadComponentFile('library',"BaseLibrary");
+        $this->loadComponentFile('core',"BaseLibrary");
         $this->loadComponentFile('library',$name);
         $long_class_name="sinri\\musikago\\library\\$name";
         $lib=new $long_class_name();
-        $this->components[$name]=$lib;
+        $lib_key=$name;
+        if($lib->shortName()){
+            $lib_key=$lib->shortName();
+        }
+        $this->components[$lib_key]=$lib;
     }
     public function loadAgent($name)
     {
@@ -80,9 +106,6 @@ class Musikago
         $agent = new $long_class_name();
         return $agent;
     }
-    public function loadView($name){
-        $this->loadComponentFile('view', $name);
-    }
     private function loadComponentFile($aspect,$name){
         $filename=__DIR__.'/../'.$aspect.'/'.$name.'.php';
         if(file_exists($filename)){
@@ -90,6 +113,15 @@ class Musikago
         }else{
             throw new \Exception("The {$aspect} called '{$name}' could not be found.");
         }
+    }
+
+    private function loadDatabase(){
+        $target=$this->config->readConfig('DatabaseConfig','target');
+        $params=$this->config->readConfig('DatabaseConfig','source',$target);
+        if(!($target && $params && is_array($params))){
+            throw new \Exception("Database Config Error");
+        }
+        $this->components['db']=new SinriPDO($params);
     }
 
     public function __get($name)

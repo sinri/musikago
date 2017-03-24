@@ -10,8 +10,19 @@
 <html>
     <head>
         <title>Musikago</title>
+        <script src="./asset/js/jquery/2.2.4/jquery.min.js"></script>
+        <script src="./asset/js/AgentHeader.js"></script>
+        <link rel="stylesheet" type="text/css" href="./asset/css/AgentStyle.css">
     </head>
     <body>
-        <h1>Musikago</h1>
+        <div id="head_bar"></div>
+        <div id="container">
+            Welcome!
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                MusikagoJs.loadHeadBar('Home');
+            })
+        </script>
     </body>
 </html>

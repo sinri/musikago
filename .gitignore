@@ -1,2 +1,3 @@
 .idea
 composer.lock
+session_dir
