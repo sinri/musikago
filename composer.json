@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": ">=5.2.4",
-    "sinri/sinri-database-agent": ">=0.6"
+    "sinri/sinri-database-agent": ">=0.6",
+    "cebe/markdown": ">=1.1.1"
   },
   "require-dev": {
   }

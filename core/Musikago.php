@@ -30,22 +30,9 @@ class Musikago
 
     public function start()
     {
+        $this->loadDefaultComponents();
         try {
-            $this->components = [];
-            // Load helpers and libraries
-            $this->loadHelper("CommonHelper");
-
-            $this->loadCoreLibrary("LibConfig");
-            $this->loadCoreLibrary("LibInput");
-            $this->loadCoreLibrary("LibOutput");
-            $this->loadCoreLibrary("LibSession");
-
-            // $this->loadCoreLibrary("LibDatabase");
-            $this->loadDatabase();
-
             // Seek agent and pass request to it
-//            $params=$this->input->fullGetFields();
-
             $input_error = LibInput::REQUEST_NO_ERROR;
             $agent_name = $this->input->readGet('agent', 'HomeAgent', '/^[A-Za-z0-9_\/]+$/', $input_error);
             if ($input_error === LibInput::REQUEST_REGEX_NOT_MATCH) {
@@ -60,10 +47,6 @@ class Musikago
                 throw new \Exception("Action {$action_name} is not correctly declared.");
             }
 
-//            unset($params['agent']);
-//            unset($params['action']);
-
-//            $data = $this->input->fullPostFields();
         } catch (\Exception $exception) {
             $this->output->error("The request could not be correctly handled!", $exception);
             return;
@@ -71,6 +54,29 @@ class Musikago
 
         // The exception from process inside the agent would not be handled globally
         $agent->$action_name();
+    }
+
+    public function runUnderCLI($action_name,$method_name='defaultMethod',$params=[]){
+        $this->loadDefaultComponents();
+        $action = $this->loadAction($action_name);
+        if(method_exists($action,$method_name)) {
+            $action->$method_name($params);
+        }else{
+            throw new \Exception("No such method in the Action!");
+        }
+    }
+
+    public function loadDefaultComponents(){
+        // Load helpers and libraries
+        $this->loadHelper("CommonHelper");
+
+        $this->loadCoreLibrary("LibConfig");
+        $this->loadCoreLibrary("LibInput");
+        $this->loadCoreLibrary("LibOutput");
+        $this->loadCoreLibrary("LibSession");
+
+        // $this->loadCoreLibrary("LibDatabase");
+        $this->loadDatabase();
     }
 
     public function loadHelper($name){
@@ -105,6 +111,14 @@ class Musikago
         $long_class_name = "sinri\\musikago\\agent\\$name";
         $agent = new $long_class_name();
         return $agent;
+    }
+    public function loadAction($name)
+    {
+        $this->loadComponentFile('action',"BaseAction");
+        $this->loadComponentFile('action', $name);
+        $long_class_name = "sinri\\musikago\\action\\$name";
+        $action = new $long_class_name();
+        return $action;
     }
     private function loadComponentFile($aspect,$name){
         $filename=__DIR__.'/../'.$aspect.'/'.$name.'.php';

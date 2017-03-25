@@ -10,9 +10,25 @@ class ComposerStaticInit0b5dea3eb4fa840711393f5fb40cf6e7
         '4bd168237f3cf82862fe62475e398a5c' => __DIR__ . '/..' . '/sinri/sinri-database-agent/autoload.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'c' => 
+        array (
+            'cebe\\markdown\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'cebe\\markdown\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cebe/markdown',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0b5dea3eb4fa840711393f5fb40cf6e7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0b5dea3eb4fa840711393f5fb40cf6e7::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

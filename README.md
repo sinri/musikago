@@ -26,6 +26,7 @@ For a little more details,
 * display_name
 * email
 * password
+* site_role // ADMIN or NULL
 
 #### Project
 
@@ -36,8 +37,7 @@ For a little more details,
 
 * project_id
 * user_id
-* disabled
-* role
+* role // admin, developer, reporter, disabled
 
 #### Issue
 
@@ -48,7 +48,7 @@ For a little more details,
 * priority
 * current_status
 
-#### Issue Event
+#### Event
 
 * event_id
 * issue_id
@@ -56,9 +56,9 @@ For a little more details,
 * event_status
 * description
 
-#### Issue Event Attributes
+#### Event Attributes
 
-* event_attribute_id
+* attribute_id
 * event_id
 * key
 * value

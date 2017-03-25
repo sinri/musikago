@@ -33,6 +33,24 @@ button {
     clear: both;
 }
 
+table {
+    border-collapse: collapse;
+}
+th {
+    background-color: black;
+    color:lightgray;
+    text-align: center;
+    border: 1px solid gray;
+    padding: 2px;
+}
+td {
+    background-color: white;
+    color:black;
+    text-align: center;
+    border: 1px solid gray;
+    padding: 2px;
+}
+
 #head_bar {
     position: absolute;
     top: 0;
@@ -69,4 +87,12 @@ button {
     position: absolute;
     margin-top: 50px;
     width: 100%;
+}
+
+.pane {
+    width: 90%;
+    margin: 10px auto;
+}
+.hide{
+    display: none;
 }
